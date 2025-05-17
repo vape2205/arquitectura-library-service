@@ -5,9 +5,16 @@ services:
       context: .
       dockerfile: library.api/Dockerfile
     environment:
-      - MongoDBSettings__ConnectionString=mongodb://library.mongo:27017
+        MongoDBSettings__ConnectionString: ${LIBRARY_MONGODB_CONNECTIONSTRING}
+        MongoDBSettings__DatabaseName: ${LIBRARY_MONGODB_DATABASE_NAME}
+        AccessTokenSettings__publicKey: ${AUTH_RSA_PUBLICKEY}
+        AccessTokenSettings__Issuer: http://localhost:5000
+        AccessTokenSettings__Audience: http://localhost:6000
+        AWSS3Settings__BucketName: ${LIBRARY_AWSS3_BUCKETNAME}
+        AWSS3Settings__AccessKey: ${LIBRARY_AWSS3_ACCESSKEY}
+        AWSS3Settings__SecretKey: ${LIBRARY_AWSS3_SECRETKEY}
     ports:
-      - "6000:8080"
+      - "${LIBRARY_PORT}:8080"
     depends_on:
       - library.mongo
 
