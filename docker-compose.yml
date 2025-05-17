@@ -1,0 +1,29 @@
+services:
+  library.api:
+    image: ${DOCKER_REGISTRY-}libraryapi
+    build:
+      context: .
+      dockerfile: library.api/Dockerfile
+    environment:
+      - MongoDBSettings__ConnectionString=mongodb://library.mongo:27017
+    ports:
+      - "6000:8080"
+    depends_on:
+      - library.mongo
+
+  library.mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - type: volume
+        source: library-mongo-volume
+        target: /data/db
+      - type: volume
+        source: library-mongo-volume
+        target: /data/configdb
+
+volumes:
+  library-mongo-volume:
+    name: library-mongo-volume
