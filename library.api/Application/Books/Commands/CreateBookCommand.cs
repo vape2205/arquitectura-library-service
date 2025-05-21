@@ -2,7 +2,7 @@
 
 namespace library.api.Application.Books.Commands
 {
-    public class CreateBookCommand : ICommand
+    public class CreateBookCommand : ICommand<BookModel>
     {
         public string Title { get; set; }
         public string Subtitle { get; set; }

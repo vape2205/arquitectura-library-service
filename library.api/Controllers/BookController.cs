@@ -59,7 +59,7 @@ namespace library.api.Controllers
             var result = await _mediator.Send(command);
             if (result.IsSuccess)
             {
-                return Ok(result.Successes[0].Message);
+                return Ok(result.Value);
             }
             else
             {

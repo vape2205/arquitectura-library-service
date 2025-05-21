@@ -8,5 +8,6 @@
         public string Authors { get; set; }
         public string Isdn { get; set; }
         public string Base64File { get; set; }
+        public string UrlDocument { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using library.api.Application.Services.Files;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Options;
 
 namespace library.api.Infraestructure.Files
@@ -46,6 +47,20 @@ namespace library.api.Infraestructure.Files
                 ContentType = contentType
             };
             var response = await client.PutObjectAsync(putRequest);
+        }
+
+        public async Task<string> GetDocumentUrl(string fileName)
+        {
+            var client = GetClient();
+            GetPreSignedUrlRequest preSignedUrlRequest = new GetPreSignedUrlRequest
+            {
+                BucketName = _settings.Value.BucketName,
+                Key = fileName,
+                Expires = DateTime.UtcNow.AddHours(1)
+            };
+
+            string preSignedUrl = await client.GetPreSignedURLAsync(preSignedUrlRequest);
+            return preSignedUrl;
         }
 
         private IAmazonS3 GetClient()

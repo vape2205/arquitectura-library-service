@@ -7,5 +7,6 @@ namespace library.api.Application.Services.Files
         Task Upload(string fileName, string contentType, byte[] contentBytes);
 
         Task<byte[]> GetFile(string fileName);
+        Task<string> GetDocumentUrl(string fileName);
     }
 }

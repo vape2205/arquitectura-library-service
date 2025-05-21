@@ -4,12 +4,13 @@ using library.api.Application.Books.Commands;
 using library.api.Application.Repositories;
 using library.api.Application.Services.Files;
 using library.api.Entities;
+using library.api.Models;
 using MediatR;
 
 namespace library.api.Application.Books.Handlers
 {
     public class CreateBookCommandHandler
-        : IRequestHandler<CreateBookCommand, Result>
+        : IRequestHandler<CreateBookCommand, Result<BookModel>>
     {
         private readonly IBookRepository _bookRepository;
         private readonly IFileRepositoryService _fileRepositoryService;
@@ -28,7 +29,7 @@ namespace library.api.Application.Books.Handlers
             _logger = logger;
         }
 
-        public async Task<Result> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task<Result<BookModel>> Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
             var existingBook = await _bookRepository.GetByIsdn(request.Isdn);
             if (existingBook != null)
@@ -54,8 +55,9 @@ namespace library.api.Application.Books.Handlers
             }
 
             book.UrlFile = fileName;
-            await _bookRepository.Insert(book);
-            return Result.Ok().WithSuccess(book.Id.ToString());
+            var result = await _bookRepository.Insert(book);
+            var model = _mapper.Map<BookModel>(result);
+            return Result.Ok(model);
         }
     }
 }
